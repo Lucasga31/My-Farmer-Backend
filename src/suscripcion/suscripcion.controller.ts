@@ -24,7 +24,9 @@ export class SuscripcionController {
   ) {}
 
   /**
-   * 🟢 GET /suscripciones
+   * GET /suscripciones
+   * Muestra las suscripciones de un usuario
+   * Body: ninguno
    * Headers: Authorization: Bearer <token_supabase>
    */
   @UseGuards(SupabaseAuthGuard)
@@ -35,7 +37,9 @@ export class SuscripcionController {
   }
 
   /**
-   * 🟢 GET /suscripciones/activa
+   * GET /suscripciones/activa
+   * Muestra la suscripcion activa
+   * Body: ninguno
    * Headers: Authorization: Bearer <token_supabase>
    */
   @UseGuards(SupabaseAuthGuard)
@@ -46,9 +50,13 @@ export class SuscripcionController {
   }
 
   /**
-   * 🔵 POST /suscripciones
+   * POST /suscripciones
+   * Crea una suscripcion para el usuario
    * Headers: Authorization: Bearer <token_supabase>
-   * Body: { "Plan": "Básico", "Facturacion": "Mensual" }
+   * Body: { 
+   * "Plan": "gratuito",        gratuito, premium
+   * "Facturacion": "mensual"     mensual, anual   
+   *  }
    */
   @UseGuards(SupabaseAuthGuard)
   @Post()
@@ -61,7 +69,10 @@ export class SuscripcionController {
   }
 
   /**
-   * 🟠 PATCH /suscripciones/:id
+   * PATCH /suscripciones/:id
+   * Modifica una suscripcion
+   * Params:
+   *  - id (obligatorio): ID de la suscripcion
    * Headers: Authorization: Bearer <token_supabase>
    * Body: { "Estado": "Activa" }
    */
@@ -75,7 +86,11 @@ export class SuscripcionController {
   }
 
   /**
-   * 🟠 PATCH /suscripciones/:id/vencer
+   * PATCH /suscripciones/:id/vencer
+   * Vence una suscripcion
+   * Params:
+   *  - id (obligatorio): ID de la suscripcion
+   * Body: ninguno
    * Headers: Authorization: Bearer <token_supabase>
    */
   @UseGuards(SupabaseAuthGuard)
@@ -87,8 +102,10 @@ export class SuscripcionController {
   /**
    * PATCH /suscripciones/:id/cancelar
    * Cancela una suscripción.
+   * Params:
+   *  - id (obligatorio): ID de la suscripcion
    * Headers: Authorization: Bearer <token>
-   * Requiere UsuarioService: no
+   * Body: ninguno
    */
   @UseGuards(SupabaseAuthGuard)
   @Patch(':id/cancelar')

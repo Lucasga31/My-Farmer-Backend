@@ -38,7 +38,6 @@ export class CrecimientoController {
    *  - limit (opcional): número de registros a retornar
    * Body: ninguno
    * Headers: Authorization: Bearer <token>
-   * Requiere UsuarioService: no
    */
   @UseGuards(SupabaseAuthGuard)
   @Get('cultivo/:cultivoId')
@@ -58,7 +57,6 @@ export class CrecimientoController {
    *  - id (obligatorio): ID del crecimiento
    * Body: ninguno
    * Headers: Authorization: Bearer <token>
-   * Requiere UsuarioService: sí
    */
   @UseGuards(SupabaseAuthGuard)
   @Get(':id')
@@ -73,15 +71,14 @@ export class CrecimientoController {
   /**
    * POST /crecimiento
    * Crea un registro de crecimiento asociado al usuario autenticado.
-   * Body (JSON) ejemplo para Postman:
+   * Body:
    * {
    *   "Cultivo_id": 1,
    *   "Altura": 35.5,
    *   "Observaciones": "Crecimiento saludable",
-   *   "Foto": "https://example.com/crecimiento.jpg"
+   *   "Foto": archivo
    * }
    * Headers: Authorization: Bearer <token>, Content-Type: application/json
-   * Requiere UsuarioService: sí
    */
   @UseGuards(SupabaseAuthGuard)
   @Post()
@@ -100,14 +97,13 @@ export class CrecimientoController {
    * Actualiza un registro de crecimiento.
    * Params:
    *  - id (obligatorio): ID del crecimiento
-   * Body (JSON) ejemplo para Postman:
+   * Body:
    * {
    *   "Altura": 40.2,
    *   "Observaciones": "Aumento notable",
-   *   "Foto": "https://example.com/nueva-foto.jpg"
+   *   "Foto": archivo
    * }
    * Headers: Authorization: Bearer <token>, Content-Type: application/json
-   * Requiere UsuarioService: no
    */
   @UseGuards(SupabaseAuthGuard)
   @Patch(':id')
@@ -127,7 +123,6 @@ export class CrecimientoController {
    *  - id (obligatorio): ID del crecimiento
    * Body: ninguno
    * Headers: Authorization: Bearer <token>
-   * Requiere UsuarioService: no
    */
   @UseGuards(SupabaseAuthGuard)
   @Delete(':id')

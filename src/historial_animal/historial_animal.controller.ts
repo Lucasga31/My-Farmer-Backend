@@ -20,6 +20,7 @@ export class HistorialAnimalController {
    *  - limit (opcional): número máximo de registros a retornar
    * Params:
    *  - animalId (obligatorio): ID del animal
+   * Body: ninguno
    * Headers: Authorization: Bearer <token>
    */
   @UseGuards(SupabaseAuthGuard)

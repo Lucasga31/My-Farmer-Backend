@@ -18,8 +18,7 @@ export class TipoCultivoController {
    * GET /tipos-cultivo
    * Retorna todos los tipos de cultivo.
    * Body: ninguno
-   * Headers: ninguno
-   * No requiere UsuarioService
+   * Headers: Authorization: Bearer <token_supabase>
    */
   @UseGuards(SupabaseAuthGuard)
   @Get()
@@ -33,8 +32,7 @@ export class TipoCultivoController {
    * Params:
    *  - id (obligatorio): ID del tipo de cultivo
    * Body: ninguno
-   * Headers: ninguno
-   * No requiere UsuarioService
+   * Headers: Authorization: Bearer <token_supabase>
    */
   @UseGuards(SupabaseAuthGuard)
   @Get(':id')
@@ -49,9 +47,9 @@ export class TipoCultivoController {
    *  {
    *    "Nombre": "Maíz",
    *    "Descripcion": "Cultivo de maíz amarillo",
-   *    "Icono": "https://example.com/iconos/maiz.png"
+   *    "Icono": archivo
    *  }
-   * Headers: ninguno
+   * Headers: Authorization: Bearer <token_supabase>
    * No requiere UsuarioService
    */
   @UseGuards(SupabaseAuthGuard)
@@ -73,10 +71,9 @@ export class TipoCultivoController {
    *  {
    *    "Nombre": "Maíz Mejorado",
    *    "Descripcion": "Cultivo de maíz con mejor rendimiento",
-   *    "Icono": "https://example.com/iconos/maiz_mejorado.png"
+   *    "Icono": archivo
    *  }
-   * Headers: ninguno
-   * No requiere UsuarioService
+   * Headers: Authorization: Bearer <token_supabase>
    */
   @UseGuards(SupabaseAuthGuard)
   @Patch(':id')
@@ -95,8 +92,7 @@ export class TipoCultivoController {
    * Params:
    *  - id (obligatorio): ID del tipo de cultivo
    * Body: ninguno
-   * Headers: ninguno
-   * No requiere UsuarioService
+   * Headers: Authorization: Bearer <token_supabase>
    */
   @UseGuards(SupabaseAuthGuard)
   @Delete(':id')

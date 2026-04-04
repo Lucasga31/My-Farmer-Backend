@@ -88,7 +88,7 @@ export class AnimalController {
    *    "color": "Marrón",
    *    "categoriaId": 1,
    *    "edad": 3,
-   *    "foto": "https://url-de-foto.com/imagen.jpg"
+   *    "foto": archivo
    *  }
    * Headers: Authorization: Bearer <token>
    */
@@ -114,7 +114,7 @@ export class AnimalController {
    *    "nombre": "NuevoNombre",
    *    "color": "Negro",
    *    "edad": 4,
-   *    "foto": "https://url-de-foto-nueva.com/imagen.jpg"
+   *    "foto": archivo
    *  }
    * Headers: Authorization: Bearer <token>
    */

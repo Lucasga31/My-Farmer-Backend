@@ -30,7 +30,6 @@ export class ParcelaController {
    * Params: ninguno
    * Body: ninguno
    * Headers: Authorization: Bearer <token>
-   * Requiere UsuarioService: sí
    */
   @UseGuards(SupabaseAuthGuard)
   @Get()
@@ -46,7 +45,6 @@ export class ParcelaController {
    *  - id (obligatorio): ID de la parcela
    * Body: ninguno
    * Headers: Authorization: Bearer <token>
-   * Requiere UsuarioService: sí
    */
   @UseGuards(SupabaseAuthGuard)
   @Get(':id')
@@ -61,7 +59,7 @@ export class ParcelaController {
   /**
    * POST /parcelas
    * Crea una nueva parcela para el usuario autenticado.
-   * Body (JSON) ejemplo para Postman:
+   * Body:
    * {
    *   "Nombre": "Lote 3",
    *   "Area": 2.75,
@@ -76,7 +74,6 @@ export class ParcelaController {
    *   ]
    * }
    * Headers: Authorization: Bearer <token>, Content-Type: application/json
-   * Requiere UsuarioService: sí
    */
   @UseGuards(SupabaseAuthGuard)
   @Post()
@@ -93,7 +90,7 @@ export class ParcelaController {
    * Actualiza una parcela del usuario autenticado.
    * Params:
    *  - id (obligatorio): ID de la parcela
-   * Body (JSON) ejemplo para Postman:
+   * Body:
    * {
    *   "Nombre": "Lote 3 Actualizado",
    *   "Area": 3.1,
@@ -109,7 +106,6 @@ export class ParcelaController {
    *   "Activo": true
    * }
    * Headers: Authorization: Bearer <token>, Content-Type: application/json
-   * Requiere UsuarioService: sí
    */
   @UseGuards(SupabaseAuthGuard)
   @Patch(':id')
@@ -129,7 +125,6 @@ export class ParcelaController {
    *  - id (obligatorio): ID de la parcela
    * Body: ninguno
    * Headers: Authorization: Bearer <token>
-   * Requiere UsuarioService: sí
    */
   @UseGuards(SupabaseAuthGuard)
   @Delete(':id')

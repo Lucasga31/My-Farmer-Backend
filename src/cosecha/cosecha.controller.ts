@@ -34,7 +34,6 @@ export class CosechaController {
    *  - limit (opcional): número de registros
    * Body: ninguno
    * Headers: Authorization: Bearer <token>
-   * Requiere UsuarioService: no
    */
   @UseGuards(SupabaseAuthGuard)
   @Get('cultivo/:cultivoId')
@@ -54,7 +53,6 @@ export class CosechaController {
    *  - id (obligatorio): ID de la cosecha
    * Body: ninguno
    * Headers: Authorization: Bearer <token>
-   * Requiere UsuarioService: sí
    */
   @UseGuards(SupabaseAuthGuard)
   @Get(':id')
@@ -69,7 +67,7 @@ export class CosechaController {
   /**
    * POST /cosechas
    * Crea una nueva cosecha para el usuario autenticado.
-   * Body (JSON) ejemplo para Postman:
+   * Body:
    * {
    *   "Cultivo_id": 1,
    *   "Fecha": "2026-07-12",
@@ -78,7 +76,6 @@ export class CosechaController {
    *   "Observaciones": "Buena producción"
    * }
    * Headers: Authorization: Bearer <token>, Content-Type: application/json
-   * Requiere UsuarioService: sí
    */
   @UseGuards(SupabaseAuthGuard)
   @Post()
@@ -95,7 +92,7 @@ export class CosechaController {
    * Actualiza una cosecha específica.
    * Params:
    *  - id (obligatorio): ID de la cosecha
-   * Body (JSON) ejemplo para Postman:
+   * Body:
    * {
    *   "Fecha": "2026-07-15",
    *   "Cantidad": 1600,
@@ -103,7 +100,6 @@ export class CosechaController {
    *   "Observaciones": "Ajuste por medición final"
    * }
    * Headers: Authorization: Bearer <token>, Content-Type: application/json
-   * Requiere UsuarioService: no
    */
   @UseGuards(SupabaseAuthGuard)
   @Patch(':id')
@@ -121,7 +117,6 @@ export class CosechaController {
    *  - id (obligatorio): ID de la cosecha
    * Body: ninguno
    * Headers: Authorization: Bearer <token>
-   * Requiere UsuarioService: no
    */
   @UseGuards(SupabaseAuthGuard)
   @Delete(':id')

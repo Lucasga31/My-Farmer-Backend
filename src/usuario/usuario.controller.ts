@@ -26,8 +26,10 @@ export class UsuarioController {
   constructor(private readonly usuarioService: UsuarioService) { }
 
   /**
-   * 🟢 GET /usuarios/me
+   * GET /usuarios/me
+   * Es para registrar al usuario cuando se haya creado en supabase
    * Headers: Authorization: Bearer <token_supabase>
+   * Body: ninguno
    */
   @UseGuards(SupabaseAuthGuard)
   @Get('me')
@@ -50,8 +52,11 @@ export class UsuarioController {
   }
 
   /**
-   * 🟢 GET /usuarios
+   * SIN UTILIZAR
+   * GET /usuarios
+   * Muestra todos los usuarios
    * Headers: Authorization: Bearer <token_supabase>
+   * Body: ninguno
    */
   @UseGuards(SupabaseAuthGuard)
   @Get()
@@ -60,8 +65,13 @@ export class UsuarioController {
   }
 
   /**
-   * 🟢 GET /usuarios/:id
+   * SIN UTILZAR
+   * GET /usuarios/:id
+   * Busca a un usuario por ID
+   * Params:
+   *  - id (obligatorio): ID de usuario
    * Headers: Authorization: Bearer <token_supabase>
+   * Body: ninguno
    */
   @UseGuards(SupabaseAuthGuard)
   @Get(':id')
@@ -70,7 +80,8 @@ export class UsuarioController {
   }
 
   /**
-   * 🔵 POST /usuarios
+   * SIN UTILIZAR
+   * POST /usuarios
    * Body: { "Nombre": "Juan", "Apellido": "Perez", "Correo": "juan@example.com", "Contrasena": "123456" }
    */
   @Post()
@@ -79,8 +90,9 @@ export class UsuarioController {
   }
 
   /**
-   * � POST /usuarios/solicitar-recuperacion
-   * Body: { "email": "juan@example.com" }
+   * POST /usuarios/solicitar-recuperacion
+   * Permite enviar al correo que se ingreso el pin
+   * Body: { "email": "juan@gmail.com" }
    */
   @Post('solicitar-recuperacion')
   solicitarRecuperacion(@Body() body: { email: string }) {
@@ -88,8 +100,9 @@ export class UsuarioController {
   }
 
   /**
-   * � POST /usuarios/confirmar-recuperacion
-   * Body: { "email": "juan@example.com", "codigo": "123456", "nuevaContrasena": "nueva123" }
+   * POST /usuarios/confirmar-recuperacion
+   * Cambia la contraseña al validar el pin buscando por el email
+   * Body: { "email": "juan@gmail.com", "codigo": "123456", "nuevaContrasena": "nueva123" }
    */
   @Post('confirmar-recuperacion')
   confirmarRecuperacion(
@@ -104,7 +117,8 @@ export class UsuarioController {
   }
 
   /**
-   * 🟠 PATCH /usuarios/cambiar-contrasena
+   * PATCH /usuarios/cambiar-contrasena
+   * Cambia la contraseña
    * Headers: Authorization: Bearer <token_supabase>
    * Body: { "contrasenaNueva": "nueva123" }
    */
@@ -125,6 +139,7 @@ export class UsuarioController {
   }
 
   /**
+   * NO UTILIZAR
    * 🟠 PATCH /usuarios/restablecer-contrasena
    * Body: { "email": "juan@example.com", "redirectTo": "http://localhost:3000/reset" }
    */
@@ -136,6 +151,7 @@ export class UsuarioController {
   }
 
   /**
+   * POR ARREGLAR
    * 🟠 PATCH /usuarios/:id
    * Headers: Authorization: Bearer <token_supabase>
    * Body: { "Nombre": "Juan Editado" }
@@ -150,6 +166,7 @@ export class UsuarioController {
   }
 
   /**
+   * SIN UTILIZAR
    * 🟠 PATCH /usuarios/:id/premium
    * Headers: Authorization: Bearer <token_supabase>
    * Body: { "premium": true, "expira": "2026-12-31T23:59:59Z" }
@@ -165,6 +182,7 @@ export class UsuarioController {
   }
 
   /**
+   * SIN UTILIZAR
    * 🔴 DELETE /usuarios/:id
    * Headers: Authorization: Bearer <token_supabase>
    */
