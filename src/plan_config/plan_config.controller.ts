@@ -24,7 +24,6 @@ export class PlanConfigController {
    * Params: ninguno
    * Body: ninguno
    * Headers: Authorization: Bearer <token>
-   * Requiere UsuarioService: no
    */
   @UseGuards(SupabaseAuthGuard)
   @Get()
@@ -35,14 +34,13 @@ export class PlanConfigController {
   /**
    * POST /plan-config
    * Crea una nueva configuración de plan.
-   * Body (JSON) ejemplo para Postman:
+   * Body:
    * {
-   *   "Tipo_Plan": "PREMIUM",                    premium, gratuito
-   *   "Nombre_Parametro": "MAX_CULTIVOS",       maxRecordatorios, maxCultivos, maxAnimales    
+   *   "Tipo_Plan": "premium",                    premium, gratuito
+   *   "Nombre_Parametro": "maxCultivos",       maxRecordatorios, maxCultivos, maxAnimales    
    *   "Valor": 50
    * }
    * Headers: Authorization: Bearer <token>, Content-Type: application/json
-   * Requiere UsuarioService: no
    */
   @UseGuards(SupabaseAuthGuard)
   @Post()
@@ -57,12 +55,11 @@ export class PlanConfigController {
    * Actualiza una configuración de plan.
    * Params:
    *  - id (obligatorio): ID de la configuración
-   * Body (JSON) ejemplo para Postman:
+   * Body:
    * {
    *   "Valor": 100
    * }
    * Headers: Authorization: Bearer <token>, Content-Type: application/json
-   * Requiere UsuarioService: no
    */
   @UseGuards(SupabaseAuthGuard)
   @Patch(':id')

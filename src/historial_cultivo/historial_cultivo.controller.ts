@@ -20,6 +20,7 @@ export class HistorialCultivoController {
    *  - limit (opcional): número máximo de registros a retornar
    * Params:
    *  - cultivoId (obligatorio): ID del cultivo
+   * Body: ninguno
    * Headers: Authorization: Bearer <token>
    */
   @UseGuards(SupabaseAuthGuard)

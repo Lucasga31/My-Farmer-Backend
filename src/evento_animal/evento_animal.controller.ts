@@ -38,7 +38,6 @@ export class EventoAnimalController {
    *  - limit (opcional)
    * Body: ninguno
    * Headers: Authorization: Bearer <token>
-   * Requiere UsuarioService: sí
    */
   @UseGuards(SupabaseAuthGuard)
   @Get('animal/:animalId')
@@ -62,7 +61,6 @@ export class EventoAnimalController {
    *  - id (obligatorio): ID del evento
    * Body: ninguno
    * Headers: Authorization: Bearer <token>
-   * Requiere UsuarioService: sí
    */
   @UseGuards(SupabaseAuthGuard)
   @Get(':id')
@@ -77,17 +75,16 @@ export class EventoAnimalController {
   /**
    * POST /eventos-animal
    * Crea un nuevo evento para un animal del usuario autenticado.
-   * Body (JSON) ejemplo para Postman:
+   * Body:
    * {
    *   "Animal_id": 1,
    *   "Titulo": "Vacunacion",       
    *   "Fecha": "2026-03-01",
    *   "Tipo": "vacuna",        vacuna, revision, tratamiento, alimentacion, otro
    *   "Descripcion": "Vacuna contra enfermedades",
-   *   "Foto": "https://example.com/evento.jpg"
+   *   "Foto": archivo
    * }
    * Headers: Authorization: Bearer <token>, Content-Type: application/json
-   * Requiere UsuarioService: sí
    */
   @UseGuards(SupabaseAuthGuard)
   @Post()
@@ -106,16 +103,15 @@ export class EventoAnimalController {
    * Actualiza un evento del usuario autenticado.
    * Params:
    *  - id (obligatorio): ID del evento
-   * Body (JSON) ejemplo para Postman:
+   * Body:
    * {
    *   "Titulo": "Vacunación anual",
    *   "Fecha": "2026-03-02",
-   *   "Tipo": "SALUD",
+   *   "Tipo": "vacuna",        vacuna, revision, tratamiento, alimentacion, otro
    *   "Descripcion": "Refuerzo aplicado",
-   *   "Foto": "https://example.com/nueva-foto.jpg"
+   *   "Foto": archivo
    * }
    * Headers: Authorization: Bearer <token>, Content-Type: application/json
-   * Requiere UsuarioService: sí
    */
   @UseGuards(SupabaseAuthGuard)
   @Patch(':id')
@@ -137,7 +133,6 @@ export class EventoAnimalController {
    *  - id (obligatorio): ID del evento
    * Body: ninguno
    * Headers: Authorization: Bearer <token>
-   * Requiere UsuarioService: sí
    */
   @UseGuards(SupabaseAuthGuard)
   @Delete(':id')

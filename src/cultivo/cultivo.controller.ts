@@ -34,7 +34,6 @@ export class CultivoController {
    * Params: ninguno
    * Body: ninguno
    * Headers: Authorization: Bearer <token>
-   * Requiere UsuarioService: sí
    */
   @UseGuards(SupabaseAuthGuard)
   @Get('activos')
@@ -49,7 +48,6 @@ export class CultivoController {
    * Params: ninguno
    * Body: ninguno
    * Headers: Authorization: Bearer <token>
-   * Requiere UsuarioService: sí
    */
   @UseGuards(SupabaseAuthGuard)
   @Get('historicos')
@@ -65,7 +63,6 @@ export class CultivoController {
    *  - id (obligatorio): ID del cultivo
    * Body: ninguno
    * Headers: Authorization: Bearer <token>
-   * Requiere UsuarioService: sí
    */
   @UseGuards(SupabaseAuthGuard)
   @Get(':id')
@@ -80,7 +77,7 @@ export class CultivoController {
   /**
    * POST /cultivos
    * Crea un nuevo cultivo para el usuario autenticado.
-   * Body (JSON) ejemplo para Postman:
+   * Body:
    * {
       "Nombre": "Maíz Primavera",
       "Estado": "Activo",
@@ -91,10 +88,9 @@ export class CultivoController {
       "Notas": "Sembrado en parcela sur",
       "Parcela_id": 1,
       "Tipo_Cultivo_id": 2,
-      "Foto": null,
+      "Foto": archivo
     }
    * Headers: Authorization: Bearer <token>, Content-Type: application/json
-   * Requiere UsuarioService: sí
    */
   @UseGuards(SupabaseAuthGuard)
   @Post()
@@ -113,7 +109,7 @@ export class CultivoController {
    * Actualiza un cultivo específico del usuario autenticado.
    * Params:
    *  - id (obligatorio): ID del cultivo
-   * Body (JSON) ejemplo para Postman:
+   * Body:
    * {
    *   "Nombre": "Maíz Verano",
    *   "Estado": "cosechado",
@@ -125,7 +121,6 @@ export class CultivoController {
    *   "Tipo_Cultivo_id": 2
    * }
    * Headers: Authorization: Bearer <token>, Content-Type: application/json
-   * Requiere UsuarioService: sí
    */
   @UseGuards(SupabaseAuthGuard)
   @Patch(':id')
@@ -147,7 +142,6 @@ export class CultivoController {
    *  - id (obligatorio): ID del cultivo
    * Body: ninguno
    * Headers: Authorization: Bearer <token>
-   * Requiere UsuarioService: sí
    */
   @UseGuards(SupabaseAuthGuard)
   @Delete(':id')

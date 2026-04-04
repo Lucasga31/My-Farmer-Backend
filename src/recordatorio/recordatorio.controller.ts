@@ -26,7 +26,9 @@ export class RecordatorioController {
   ) { }
 
   /**
-   * 🟢 GET /recordatorios
+   * GET /recordatorios
+   * Retorna los recordatorios del usuario autenticado
+   * Body: ninguno
    * Headers: Authorization: Bearer <token_supabase>
    */
   @UseGuards(SupabaseAuthGuard)
@@ -37,7 +39,11 @@ export class RecordatorioController {
   }
 
   /**
-   * 🟢 GET /recordatorios/:id
+   * GET /recordatorios/:id
+   * Retorna un recordatorio especifico
+   * Params:
+   *  - id (obligatorio): ID del recordatorio
+   * Body: ninguno
    * Headers: Authorization: Bearer <token_supabase>
    */
   @UseGuards(SupabaseAuthGuard)
@@ -48,9 +54,15 @@ export class RecordatorioController {
   }
 
   /**
-   * 🔵 POST /recordatorios
+   * POST /recordatorios
+   * Crea un recordatorio
    * Headers: Authorization: Bearer <token_supabase>
-   * Body: { "Entidad_Tipo": "Cultivo", "Entidad_id": 1, "Titulo": "Riego", "Recordar": "2026-03-31T10:00:00Z" }
+   * Body: {
+   *  "Entidad_Tipo": "cultivo",        cultivo, animal
+   *  "Entidad_id": 1, 
+   *  "Titulo": "Riego",
+   *  "Recordar": "2026-03-31T10:00:00Z"
+   *  }
    */
   @UseGuards(SupabaseAuthGuard)
   @Post()
@@ -60,9 +72,14 @@ export class RecordatorioController {
   }
 
   /**
-   * 🟠 PATCH /recordatorios/:id
+   * PATCH /recordatorios/:id
+   * Modifica un recordatorio
+   * Params:
+   *  - id (obligatorio): ID del recordatorio
    * Headers: Authorization: Bearer <token_supabase>
-   * Body: { "Titulo": "Riego Editado" }
+   * Body: { 
+   * "Titulo": "Riego Editado"
+   *  }
    */
   @UseGuards(SupabaseAuthGuard)
   @Patch(':id')
@@ -72,7 +89,10 @@ export class RecordatorioController {
   }
 
   /**
-   * 🔴 DELETE /recordatorios/:id
+   * DELETE /recordatorios/:id
+   * Elimina un recordatorio
+   * Params:
+   *  - id (obligatorio): ID del recordatorio
    * Headers: Authorization: Bearer <token_supabase>
    */
   @UseGuards(SupabaseAuthGuard)
@@ -85,12 +105,11 @@ export class RecordatorioController {
 
   /**
    * PATCH /recordatorios/entidad/:tipo/:entidadId/cancelar
-   * Cancela recordatorios por entidad (global)
+   * Cancela recordatorios por entidad
    * Params:
    *  - tipo: tipo de entidad
    *  - entidadId: ID de la entidad
    * Headers: Authorization: Bearer <token>
-   * Requiere UsuarioService: no
    */
   @UseGuards(SupabaseAuthGuard)
   @Patch('entidad/:tipo/:entidadId/cancelar')

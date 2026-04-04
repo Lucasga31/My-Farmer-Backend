@@ -20,7 +20,7 @@ export class CategoriaAnimalController {
   /**
    * GET /categorias-animal
    * Obtiene todas las categorías de animales.
-   * No requiere UsuarioService.
+   * Body: ninguno
    * Headers: Authorization: Bearer <token>
    */
   @UseGuards(SupabaseAuthGuard)
@@ -34,7 +34,7 @@ export class CategoriaAnimalController {
    * Obtiene una categoría específica por su ID.
    * Params:
    *  - id (obligatorio): ID de la categoría
-   * No requiere UsuarioService.
+   * Body: ninguno
    * Headers: Authorization: Bearer <token>
    */
   @UseGuards(SupabaseAuthGuard)
@@ -50,10 +50,9 @@ export class CategoriaAnimalController {
    *  {
    *    "Nombre": "Perro",
    *    "Descripcion": "Animales domésticos",
-   *    "Icono": "https://url-icono.com/perro.png"
+   *    "Icono": archivo
    *  }
    * Headers: Authorization: Bearer <token>
-   * No requiere UsuarioService.
    */
   @UseGuards(SupabaseAuthGuard)
   @Post()
@@ -74,10 +73,9 @@ export class CategoriaAnimalController {
    *  {
    *    "Nombre": "Gato",
    *    "Descripcion": "Animales domésticos felinos",
-   *    "Icono": "https://url-icono.com/gato.png"
+   *    "Icono": archivo
    *  }
    * Headers: Authorization: Bearer <token>
-   * No requiere UsuarioService.
    */
   @UseGuards(SupabaseAuthGuard)
   @Patch(':id')
@@ -95,8 +93,8 @@ export class CategoriaAnimalController {
    * Elimina una categoría específica.
    * Params:
    *  - id (obligatorio): ID de la categoría
+   * Body: ninguno
    * Headers: Authorization: Bearer <token>
-   * No requiere UsuarioService.
    */
   @UseGuards(SupabaseAuthGuard)
   @Delete(':id')
