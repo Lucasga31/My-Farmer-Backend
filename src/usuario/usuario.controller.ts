@@ -117,6 +117,23 @@ export class UsuarioController {
   }
 
   /**
+ * 🟠 PATCH /usuarios
+ * Headers: Authorization: Bearer <token_supabase>
+ * Body: { "Nombre": "Juan Editado" }
+ */
+  @UseGuards(SupabaseAuthGuard)
+  @Patch()
+  @UseInterceptors(FileInterceptor('Foto'))
+  async update(
+    @Req() req,
+    @Body() datos: UpdateUsuarioDto,
+    @UploadedFile() file?: File
+  ): Promise<ResponseUsuarioDto> {
+    const usuario = await this.usuarioService.getOrCreateFromToken(req.user);
+    return this.usuarioService.update(usuario.Usuario_id, datos, file);
+  }
+
+  /**
    * PATCH /usuarios/cambiar-contrasena
    * Cambia la contraseña
    * Headers: Authorization: Bearer <token_supabase>
@@ -132,7 +149,7 @@ export class UsuarioController {
     if (!userId) throw new BadRequestException('Usuario no autenticado');
 
     const usuario = await this.usuarioService.getOrCreateFromToken(req.user);
-    
+
     if (!usuario.supabaseId) throw new BadRequestException('Usuario sin supabaseId');
 
     return this.usuarioService.cambiarContrasena(usuario.supabaseId, body.contrasenaNueva);
@@ -150,20 +167,6 @@ export class UsuarioController {
     return this.usuarioService.restablecerContrasena(body.email, body.redirectTo);
   }
 
-  /**
-   * POR ARREGLAR
-   * 🟠 PATCH /usuarios/:id
-   * Headers: Authorization: Bearer <token_supabase>
-   * Body: { "Nombre": "Juan Editado" }
-   */
-  @UseGuards(SupabaseAuthGuard)
-  @Patch(':id')
-  update(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() datos: UpdateUsuarioDto,
-  ): Promise<ResponseUsuarioDto> {
-    return this.usuarioService.update(id, datos);
-  }
 
   /**
    * SIN UTILIZAR
