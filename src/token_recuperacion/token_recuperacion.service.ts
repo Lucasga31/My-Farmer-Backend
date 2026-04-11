@@ -17,6 +17,11 @@ export class TokenRecuperacionService {
 
   // ─── Mapeo a DTO ───────────────────────────────────────────────
 
+  /**
+   * Mapea una entidad TokenRecuperacion a su DTO de respuesta.
+   * @param token Entidad del token.
+   * @returns DTO de respuesta.
+   */
   private toResponseDto(token: TokenRecuperacion): ResponseTokenRecuperacionDto {
     return {
       id: token.id,
@@ -30,10 +35,18 @@ export class TokenRecuperacionService {
 
   // ─── Generación de PIN ─────────────────────────────────────────
 
+  /**
+   * Genera un código PIN aleatorio de 6 dígitos.
+   * @returns PIN como string.
+   */
   private generarPin(): string {
     return Math.floor(100000 + Math.random() * 900000).toString();
   }
 
+  /**
+   * Calcula la fecha de expiración para el token (15 minutos desde el momento actual).
+   * @returns Fecha de expiración.
+   */
   private calcularExpiracion(): Date {
     const expira = new Date();
     expira.setMinutes(expira.getMinutes() + 15); // ⚡ 15 min recomendado
@@ -42,6 +55,12 @@ export class TokenRecuperacionService {
 
   // ─── Crear PIN ─────────────────────────────────────────────────
 
+  /**
+   * Crea un nuevo token de recuperación para un usuario.
+   * Invalida automáticamente los tokens anteriores del mismo usuario que no hayan sido usados.
+   * @param usuarioId ID del usuario.
+   * @returns Token creado en formato DTO.
+   */
   async create(usuarioId: number): Promise<ResponseTokenRecuperacionDto> {
     // 🔥 Invalidar tokens anteriores
     await this.tokenRepository.update(
@@ -62,6 +81,14 @@ export class TokenRecuperacionService {
 
   // ─── Validar PIN ───────────────────────────────────────────────
 
+  /**
+   * Valida que un PIN proporcionado sea correcto, no haya expirado y pertenezca al usuario.
+   * Controla el número de intentos fallidos (máximo 5).
+   * @param pin PIN a validar.
+   * @param usuarioId ID del usuario.
+   * @returns Entidad TokenRecuperacion si es válido.
+   * @throws BadRequestException si el PIN es incorrecto, ha expirado o se superaron los intentos.
+   */
   async validarPin(pin: string, usuarioId: number): Promise<TokenRecuperacion> {
     const token = await this.tokenRepository.findOne({
       where: {
@@ -91,6 +118,10 @@ export class TokenRecuperacionService {
 
   // ─── Marcar como usado ─────────────────────────────────────────
 
+  /**
+   * Marca un token como utilizado e invalida cualquier otro token pendiente del mismo usuario.
+   * @param token Entidad del token a marcar.
+   */
   async marcarComoUsado(token: TokenRecuperacion): Promise<void> {
     token.Usado_En = new Date();
     await this.tokenRepository.save(token);
@@ -104,6 +135,12 @@ export class TokenRecuperacionService {
 
   // ─── Buscar token (opcional debug/admin) ───────────────────────
 
+  /**
+   * Busca la información de un token por el PIN.
+   * @param pin PIN a buscar.
+   * @returns DTO del token.
+   * @throws NotFoundException si no existe.
+   */
   async findByPin(pin: string): Promise<ResponseTokenRecuperacionDto> {
     const token = await this.tokenRepository.findOne({
       where: { Token: pin },

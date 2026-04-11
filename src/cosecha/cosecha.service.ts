@@ -17,6 +17,11 @@ export class CosechaService {
     private readonly cultivoRepository: Repository<Cultivo>,
   ) {}
 
+  /**
+   * Mapea una entidad Cosecha a su DTO de respuesta.
+   * @param cosecha Entidad de cosecha.
+   * @returns DTO de respuesta.
+   */
   private toResponseDto(cosecha: Cosecha): ResponseCosechaDto {
     return {
       Cosecha_id: cosecha.Cosecha_id,
@@ -29,6 +34,14 @@ export class CosechaService {
     };
   }
 
+  /**
+   * Obtiene las cosechas asociadas a un cultivo específico.
+   * @param cultivoId ID del cultivo.
+   * @param usuarioId ID del usuario propietario.
+   * @param limit Límite de resultados (máximo 100).
+   * @returns Lista de cosechas en formato DTO.
+   * @throws NotFoundException si el cultivo no existe o no pertenece al usuario.
+   */
   async findByCultivo(cultivoId: number, usuarioId: number, limit: number = 20): Promise<ResponseCosechaDto[]> {
     const limiteFinal = Math.min(limit, 100);
     
@@ -46,6 +59,13 @@ export class CosechaService {
     return cosechas.map(c => this.toResponseDto(c));
   }
 
+  /**
+   * Obtiene la información de una cosecha por su ID.
+   * @param cosechaId ID de la cosecha.
+   * @param usuarioId ID del usuario propietario.
+   * @returns DTO de la cosecha.
+   * @throws NotFoundException si la cosecha no existe o no pertenece al usuario.
+   */
   async findOne(cosechaId: number, usuarioId: number): Promise<ResponseCosechaDto> {
     const cosecha = await this.cosechaRepository.findOne({
       where: { Cosecha_id: cosechaId },
@@ -59,6 +79,15 @@ export class CosechaService {
     return this.toResponseDto(cosecha);
   }
 
+  /**
+   * Registra una nueva cosecha para un cultivo.
+   * Solo permite registrar si el cultivo está en estado COSECHADO.
+   * @param usuarioId ID del usuario.
+   * @param datos Datos de la cosecha.
+   * @returns Cosecha creada en formato DTO.
+   * @throws NotFoundException si el cultivo no existe.
+   * @throws BadRequestException si el cultivo no está en estado COSECHADO.
+   */
   async create(usuarioId: number, datos: CreateCosechaDto): Promise<ResponseCosechaDto> {
     const cultivo = await this.cultivoRepository.findOne({
       where: { Cultivo_id: datos.Cultivo_id, Usuario_id: usuarioId, Eliminado: false },
@@ -72,6 +101,13 @@ export class CosechaService {
     return this.toResponseDto(guardado);
   }
 
+  /**
+   * Actualiza la información de una cosecha existente.
+   * @param cosechaId ID de la cosecha.
+   * @param datos Nuevos datos.
+   * @returns Cosecha actualizada en formato DTO.
+   * @throws NotFoundException si la cosecha no existe.
+   */
   async update(cosechaId: number, datos: UpdateCosechaDto): Promise<ResponseCosechaDto> {
     const cosecha = await this.cosechaRepository.findOne({
       where: { Cosecha_id: cosechaId },
@@ -82,6 +118,11 @@ export class CosechaService {
     return this.toResponseDto(guardado);
   }
 
+  /**
+   * Elimina un registro de cosecha.
+   * @param cosechaId ID de la cosecha a eliminar.
+   * @throws NotFoundException si la cosecha no existe.
+   */
   async remove(cosechaId: number): Promise<void> {
     const cosecha = await this.cosechaRepository.findOne({
       where: { Cosecha_id: cosechaId },

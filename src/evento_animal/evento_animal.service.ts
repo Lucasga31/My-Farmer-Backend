@@ -21,6 +21,11 @@ export class EventoAnimalService {
 
   // ─── Mapeo a DTO ───────────────────────────────────────────────
 
+  /**
+   * Mapea una entidad EventoAnimal a su DTO de respuesta.
+   * @param evento Entidad del evento.
+   * @returns DTO de respuesta.
+   */
   private toResponseDto(evento: EventoAnimal): ResponseEventoAnimalDto {
     return {
       Evento_id: evento.Evento_id,
@@ -36,6 +41,13 @@ export class EventoAnimalService {
 
   // ─── Validación de animal ──────────────────────────────────────
 
+  /**
+   * Valida que un animal exista, pertenezca al usuario y no esté eliminado.
+   * @param animalId ID del animal.
+   * @param usuarioId ID del usuario.
+   * @returns Entidad Animal.
+   * @throws NotFoundException si el animal no es válido.
+   */
   private async validarAnimal(
     animalId: number,
     usuarioId: number,
@@ -49,6 +61,13 @@ export class EventoAnimalService {
 
   // ─── Consultas ─────────────────────────────────────────────────
 
+  /**
+   * Obtiene los eventos asociados a un animal específico.
+   * @param animalId ID del animal.
+   * @param usuarioId ID del usuario propietario.
+   * @param limit Límite de resultados (máximo 100).
+   * @returns Lista de eventos en formato DTO.
+   */
   async findByAnimal(
     animalId: number,
     usuarioId: number,
@@ -64,6 +83,13 @@ export class EventoAnimalService {
     return eventos.map(e => this.toResponseDto(e));
   }
 
+  /**
+   * Obtiene un evento específico por su ID.
+   * @param eventoId ID del evento.
+   * @param usuarioId ID del usuario propietario.
+   * @returns DTO del evento.
+   * @throws NotFoundException si el evento no existe o está eliminado.
+   */
   async findOne(
     eventoId: number,
     usuarioId: number,
@@ -77,6 +103,13 @@ export class EventoAnimalService {
 
   // ─── Crear ─────────────────────────────────────────────────────
 
+  /**
+   * Registra un nuevo evento para un animal.
+   * @param usuarioId ID del usuario.
+   * @param datos Datos del evento.
+   * @param file (Opcional) Foto del evento.
+   * @returns Evento creado en formato DTO.
+   */
   async create(
     usuarioId: number,
     datos: CreateEventoAnimalDto,
@@ -97,6 +130,15 @@ export class EventoAnimalService {
 
   // ─── Actualizar ────────────────────────────────────────────────
 
+  /**
+   * Actualiza la información de un evento existente.
+   * @param eventoId ID del evento.
+   * @param usuarioId ID del usuario propietario.
+   * @param datos Nuevos datos.
+   * @param file (Opcional) Nueva foto.
+   * @returns Evento actualizado en formato DTO.
+   * @throws NotFoundException si el evento no existe.
+   */
   async update(
     eventoId: number,
     usuarioId: number,
@@ -119,6 +161,12 @@ export class EventoAnimalService {
 
   // ─── Eliminar lógico ───────────────────────────────────────────
 
+  /**
+   * Realiza la eliminación lógica de un evento.
+   * @param eventoId ID del evento.
+   * @param usuarioId ID del usuario propietario.
+   * @throws NotFoundException si el evento no existe.
+   */
   async remove(eventoId: number, usuarioId: number): Promise<void> {
     const evento = await this.eventoRepository.findOne({
       where: { Evento_id: eventoId, Usuario_id: usuarioId, Eliminado: false },
@@ -130,6 +178,11 @@ export class EventoAnimalService {
 
   // ─── Eliminar lógico por animal ────────────────────────────────
 
+  /**
+   * Marca como eliminados todos los eventos asociados a un animal.
+   * Útil cuando se elimina un animal.
+   * @param animalId ID del animal.
+   */
   async eliminarPorAnimal(animalId: number): Promise<void> {
     await this.eventoRepository.update(
       { Animal_id: animalId, Eliminado: false },

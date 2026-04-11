@@ -32,6 +32,11 @@ export class AnimalService {
 
   // ─── Mapeo a DTO ───────────────────────────────────────────────
 
+  /**
+   * Convierte una entidad Animal a su respectivo Data Transfer Object (DTO) de respuesta.
+   * @param animal Entidad animal a convertir.
+   * @returns DTO con la información formateada para el cliente.
+   */
   private toResponseDto(animal: Animal): ResponseAnimalDto {
     return {
       Animal_id: animal.Animal_id,
@@ -54,6 +59,13 @@ export class AnimalService {
     };
   }
 
+  /**
+   * Busca un animal específico por su ID y el ID del usuario, asegurando que no esté eliminado.
+   * @param animalId ID del animal a buscar.
+   * @param usuarioId ID del usuario propietario.
+   * @returns La entidad Animal si es encontrada.
+   * @throws NotFoundException si el animal no existe o no pertenece al usuario.
+   */
   private async findEntity(animalId: number, usuarioId: number): Promise<Animal> {
     const animal = await this.animalRepository.findOne({
       where: { Animal_id: animalId, Usuario_id: usuarioId, Eliminado: false },
@@ -65,6 +77,11 @@ export class AnimalService {
 
   // ─── Consultas ─────────────────────────────────────────────────
 
+  /**
+   * Obtiene todos los animales activos de un usuario específico.
+   * @param usuarioId ID del usuario propietario.
+   * @returns Lista de animales en formato DTO.
+   */
   async findAll(usuarioId: number): Promise<ResponseAnimalDto[]> {
     const animales = await this.animalRepository.find({
       where: { Usuario_id: usuarioId, Estado: true, Eliminado: false },
@@ -74,11 +91,26 @@ export class AnimalService {
     return animales.map(a => this.toResponseDto(a));
   }
 
+  /**
+   * Obtiene la información detallada de un animal por su ID.
+   * @param animalId ID del animal.
+   * @param usuarioId ID del usuario propietario.
+   * @returns El animal solicitado en formato DTO.
+   */
   async findOne(animalId: number, usuarioId: number): Promise<ResponseAnimalDto> {
     const animal = await this.findEntity(animalId, usuarioId);
     return this.toResponseDto(animal);
   }
 
+  /**
+   * Busca animales aplicando filtros opcionales como nombre, color y categoría.
+   * @param usuarioId ID del usuario propietario.
+   * @param nombre (Opcional) Filtro por nombre.
+   * @param color (Opcional) Filtro por color.
+   * @param categoriaId (Opcional) Filtro por ID de categoría.
+   * @param limit Límite de resultados (por defecto 20, máximo 100).
+   * @returns Lista de animales filtrados en formato DTO.
+   */
   async buscar(
     usuarioId: number,
     nombre?: string,
@@ -111,7 +143,15 @@ export class AnimalService {
 
   // ─── Crear ─────────────────────────────────────────────────────
 
-  // AnimalService.ts
+  /**
+   * Registra un nuevo animal en el sistema.
+   * Valida los límites del plan del usuario, la unicidad del nombre y la existencia de categorías/parcelas.
+   * @param usuarioId ID del usuario que crea el animal.
+   * @param datos Datos del nuevo animal.
+   * @param file (Opcional) Archivo de imagen para el animal.
+   * @returns El animal creado en formato DTO.
+   * @throws BadRequestException si se alcanza el límite del plan o el nombre ya existe.
+   */
   async create(usuarioId: number, datos: CreateAnimalDto, file?: File): Promise<ResponseAnimalDto> {
     const usuario = await this.usuarioService.findEntityById(usuarioId);
 
@@ -145,6 +185,15 @@ export class AnimalService {
 
   // ─── Actualizar ────────────────────────────────────────────────
 
+  /**
+   * Actualiza la información de un animal existente.
+   * Realiza auditoría de cambios guardando el historial de las modificaciones.
+   * @param animalId ID del animal a actualizar.
+   * @param usuarioId ID del usuario propietario.
+   * @param datos Nuevos datos del animal.
+   * @param file (Opcional) Nueva imagen para el animal.
+   * @returns El animal actualizado en formato DTO.
+   */
   async update(
     animalId: number,
     usuarioId: number,
@@ -204,6 +253,12 @@ export class AnimalService {
 
   // ─── Eliminar ──────────────────────────────────────────────────
 
+  /**
+   * Realiza una eliminación lógica de un animal.
+   * Marca el animal como inactivo y eliminado, y limpia sus eventos asociados.
+   * @param animalId ID del animal a eliminar.
+   * @param usuarioId ID del usuario propietario.
+   */
   async remove(animalId: number, usuarioId: number): Promise<void> {
     const animal = await this.findEntity(animalId, usuarioId);
     animal.Estado = false;
