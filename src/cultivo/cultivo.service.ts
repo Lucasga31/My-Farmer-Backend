@@ -30,6 +30,11 @@ export class CultivoService {
 
   // ─── Mapeo a DTO ───────────────────────────────────────────────
 
+  /**
+   * Convierte una entidad Cultivo a su DTO de respuesta.
+   * @param cultivo Entidad de cultivo.
+   * @returns DTO de respuesta.
+   */
   private toResponseDto(cultivo: Cultivo): ResponseCultivoDto {
     return {
       Cultivo_id: cultivo.Cultivo_id,
@@ -50,6 +55,13 @@ export class CultivoService {
     };
   }
 
+  /**
+   * Busca un cultivo específico por su ID y el ID del usuario.
+   * @param cultivoId ID del cultivo.
+   * @param usuarioId ID del usuario propietario.
+   * @returns Entidad Cultivo.
+   * @throws NotFoundException si no se encuentra o está eliminado.
+   */
   private async findEntity(cultivoId: number, usuarioId: number): Promise<Cultivo> {
     const cultivo = await this.cultivoRepository.findOne({
       where: { Cultivo_id: cultivoId, Usuario_id: usuarioId, Eliminado: false },
@@ -61,6 +73,11 @@ export class CultivoService {
 
   // ─── Consultas ─────────────────────────────────────────────────
 
+  /**
+   * Obtiene todos los cultivos activos de un usuario.
+   * @param usuarioId ID del usuario.
+   * @returns Lista de cultivos activos en formato DTO.
+   */
   async findActivos(usuarioId: number): Promise<ResponseCultivoDto[]> {
     const cultivos = await this.cultivoRepository.find({
       where: { Usuario_id: usuarioId, Activo: true, Eliminado: false },
@@ -70,6 +87,11 @@ export class CultivoService {
     return cultivos.map(c => this.toResponseDto(c));
   }
 
+  /**
+   * Obtiene los cultivos históricos (no activos) de un usuario.
+   * @param usuarioId ID del usuario.
+   * @returns Lista de cultivos históricos en formato DTO.
+   */
   async findHistoricos(usuarioId: number): Promise<ResponseCultivoDto[]> {
     const cultivos = await this.cultivoRepository.find({
       where: { Usuario_id: usuarioId, Activo: false, Eliminado: false },
@@ -79,6 +101,12 @@ export class CultivoService {
     return cultivos.map(c => this.toResponseDto(c));
   }
 
+  /**
+   * Obtiene la información detallada de un cultivo por su ID.
+   * @param cultivoId ID del cultivo.
+   * @param usuarioId ID del usuario propietario.
+   * @returns DTO del cultivo.
+   */
   async findOne(cultivoId: number, usuarioId: number): Promise<ResponseCultivoDto> {
     const cultivo = await this.findEntity(cultivoId, usuarioId);
     return this.toResponseDto(cultivo);
@@ -86,6 +114,15 @@ export class CultivoService {
 
   // ─── Crear ─────────────────────────────────────────────────────
 
+  /**
+   * Registra un nuevo cultivo para un usuario.
+   * Valida los límites del plan del usuario y la existencia de tipos de cultivo y parcelas.
+   * @param usuarioId ID del usuario.
+   * @param datos Datos del nuevo cultivo.
+   * @param file (Opcional) Foto del cultivo.
+   * @returns Cultivo creado en formato DTO.
+   * @throws BadRequestException si se alcanza el límite del plan.
+   */
   async create(usuarioId: number, datos: CreateCultivoDto, file?: File,): Promise<ResponseCultivoDto> {
     const usuario = await this.usuarioService.findEntityById(usuarioId);
     const tipoPlan = usuario.Premium ? TipoPlan.PREMIUM : TipoPlan.GRATUITO;
@@ -112,6 +149,16 @@ export class CultivoService {
 
   // ─── Actualizar ────────────────────────────────────────────────
 
+  /**
+   * Actualiza la información de un cultivo existente.
+   * Incluye auditoría de cambios y validaciones de estados y fechas.
+   * @param cultivoId ID del cultivo.
+   * @param usuarioId ID del usuario propietario.
+   * @param datos Nuevos datos del cultivo.
+   * @param file (Opcional) Nueva foto.
+   * @returns Cultivo actualizado en formato DTO.
+   * @throws BadRequestException si las transiciones de estado o fechas son inválidas.
+   */
   async update(cultivoId: number, usuarioId: number, datos: UpdateCultivoDto, file?: File,): Promise<ResponseCultivoDto> {
 
     const cultivo = await this.findEntity(cultivoId, usuarioId);
@@ -179,6 +226,11 @@ export class CultivoService {
 
   // ─── Eliminar ──────────────────────────────────────────────────
 
+  /**
+   * Realiza la eliminación lógica de un cultivo.
+   * @param cultivoId ID del cultivo.
+   * @param usuarioId ID del usuario propietario.
+   */
   async remove(cultivoId: number, usuarioId: number): Promise<void> {
     const cultivo = await this.findEntity(cultivoId, usuarioId);
     cultivo.Eliminado = true;

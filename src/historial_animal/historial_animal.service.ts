@@ -16,6 +16,11 @@ export class HistorialAnimalService {
     private readonly animalRepository: Repository<Animal>,
   ) {}
 
+  /**
+   * Mapea una entidad HistorialAnimal a su DTO de respuesta.
+   * @param historial Entidad de historial.
+   * @returns DTO de respuesta.
+   */
   private toResponseDto(historial: HistorialAnimal): ResponseHistorialAnimalDto {
     return {
       Historial_Animal_id: historial.Historial_Animal_id,
@@ -27,6 +32,15 @@ export class HistorialAnimalService {
     };
   }
 
+  /**
+   * Obtiene el historial de cambios de un animal específico.
+   * Valida que el animal pertenezca al usuario.
+   * @param animalId ID del animal.
+   * @param usuarioId ID del usuario propietario.
+   * @param query DTO de consulta con filtros como límite.
+   * @returns Lista de registros de historial en formato DTO.
+   * @throws NotFoundException si el animal no existe o no pertenece al usuario.
+   */
   async findByAnimal(animalId: number, usuarioId: number, query: HistorialAnimalDto): Promise<ResponseHistorialAnimalDto[]> {
     // Verificar propiedad
     const animal = await this.animalRepository.findOne({

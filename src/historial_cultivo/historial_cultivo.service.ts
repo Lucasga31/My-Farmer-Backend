@@ -16,6 +16,11 @@ export class HistorialCultivoService {
     private readonly cultivoRepository: Repository<Cultivo>,
   ) {}
 
+  /**
+   * Mapea una entidad HistorialCultivo a su DTO de respuesta.
+   * @param historial Entidad de historial de cultivo.
+   * @returns DTO de respuesta.
+   */
   private toResponseDto(historial: HistorialCultivo): ResponseHistorialCultivoDto {
     return {
       Historial_Cultivo_id: historial.Historial_Cultivo_id,
@@ -27,6 +32,15 @@ export class HistorialCultivoService {
     };
   }
 
+  /**
+   * Obtiene el historial de cambios de un cultivo específico.
+   * Valida que el cultivo pertenezca al usuario.
+   * @param cultivoId ID del cultivo.
+   * @param usuarioId ID del usuario propietario.
+   * @param query DTO de consulta con filtros como límite.
+   * @returns Lista de registros de historial en formato DTO.
+   * @throws NotFoundException si el cultivo no existe o no pertenece al usuario.
+   */
   async findByCultivo(cultivoId: number, usuarioId: number, query: HistorialCultivoDto): Promise<ResponseHistorialCultivoDto[]> {
     // Verificar propiedad
     const cultivo = await this.cultivoRepository.findOne({

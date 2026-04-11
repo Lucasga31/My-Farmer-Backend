@@ -19,6 +19,11 @@ export class CrecimientoService {
     private readonly fileUploadService: FileUploadService,
   ) { }
 
+  /**
+   * Mapea una entidad Crecimiento a su DTO de respuesta.
+   * @param crecimiento Entidad de crecimiento.
+   * @returns DTO de respuesta.
+   */
   private toResponseDto(crecimiento: Crecimiento): ResponseCrecimientoDto {
     return {
       Crecimiento_id: crecimiento.Crecimiento_id,
@@ -30,6 +35,14 @@ export class CrecimientoService {
     };
   }
 
+  /**
+   * Obtiene todos los registros de crecimiento de un cultivo específico.
+   * @param cultivoId ID del cultivo.
+   * @param usuarioId ID del usuario propietario.
+   * @param limit Límite de resultados (máximo 100).
+   * @returns Lista de registros de crecimiento en formato DTO.
+   * @throws NotFoundException si el cultivo no existe o no pertenece al usuario.
+   */
   async findByCultivo(cultivoId: number, usuarioId: number, limit: number = 20): Promise<ResponseCrecimientoDto[]> {
     const limiteFinal = Math.min(limit, 100);
 
@@ -47,6 +60,13 @@ export class CrecimientoService {
     return crecimientos.map(c => this.toResponseDto(c));
   }
 
+  /**
+   * Obtiene un registro de crecimiento por su ID.
+   * @param crecimientoId ID del registro.
+   * @param usuarioId ID del usuario propietario.
+   * @returns DTO del registro de crecimiento.
+   * @throws NotFoundException si no existe o no pertenece al usuario.
+   */
   async findOne(crecimientoId: number, usuarioId: number): Promise<ResponseCrecimientoDto> {
     const crecimiento = await this.crecimientoRepository.findOne({
       where: { Crecimiento_id: crecimientoId },
@@ -60,6 +80,14 @@ export class CrecimientoService {
     return this.toResponseDto(crecimiento);
   }
 
+  /**
+   * Crea un nuevo registro de crecimiento para un cultivo.
+   * @param usuarioId ID del usuario.
+   * @param datos Datos del crecimiento.
+   * @param file (Opcional) Foto del estado del cultivo.
+   * @returns Registro creado en formato DTO.
+   * @throws NotFoundException si el cultivo no existe.
+   */
   async create(
     usuarioId: number,
     datos: CreateCrecimientoDto,
@@ -89,6 +117,14 @@ export class CrecimientoService {
     return this.toResponseDto(guardado);
   }
 
+  /**
+   * Actualiza un registro de crecimiento existente.
+   * @param crecimientoId ID del registro.
+   * @param datos Nuevos datos.
+   * @param file (Opcional) Nueva foto.
+   * @returns Registro actualizado en formato DTO.
+   * @throws NotFoundException si el registro no existe.
+   */
   async update(
     crecimientoId: number,
     datos: UpdateCrecimientoDto,
@@ -114,6 +150,11 @@ export class CrecimientoService {
     return this.toResponseDto(guardado);
   }
 
+  /**
+   * Elimina un registro de crecimiento.
+   * @param crecimientoId ID del registro a eliminar.
+   * @throws NotFoundException si el registro no existe.
+   */
   async remove(crecimientoId: number): Promise<void> {
     const crecimiento = await this.crecimientoRepository.findOne({
       where: { Crecimiento_id: crecimientoId },

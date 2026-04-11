@@ -31,6 +31,12 @@ export class UsuarioService {
   ) { }
 
   // ─── DTO mapping ───────────────────────────────────────────────
+  
+  /**
+   * Mapea una entidad Usuario a su DTO de respuesta.
+   * @param usuario Entidad usuario.
+   * @returns DTO de respuesta.
+   */
   private toResponseDto(usuario: Usuario): ResponseUsuarioDto {
     return {
       Usuario_id: usuario.Usuario_id,
@@ -49,16 +55,32 @@ export class UsuarioService {
   }
 
   // ─── Consultas ─────────────────────────────────────────────────
+
+  /**
+   * Obtiene todos los usuarios activos.
+   * @returns Lista de usuarios en formato DTO.
+   */
   async findAll(): Promise<ResponseUsuarioDto[]> {
     const usuarios = await this.usuarioRepository.find({ where: { Estado: true } });
     return usuarios.map(u => this.toResponseDto(u));
   }
 
+  /**
+   * Obtiene un usuario por su ID.
+   * @param usuarioId ID del usuario.
+   * @returns DTO del usuario.
+   */
   async findOne(usuarioId: number): Promise<ResponseUsuarioDto> {
     const usuario = await this.findEntityById(usuarioId);
     return this.toResponseDto(usuario);
   }
 
+  /**
+   * Busca la entidad de un usuario por su ID, asegurando que esté activo.
+   * @param usuarioId ID del usuario.
+   * @returns Entidad Usuario.
+   * @throws NotFoundException si el usuario no existe.
+   */
   async findEntityById(usuarioId: number): Promise<Usuario> {
     const usuario = await this.usuarioRepository.findOne({
       where: { Usuario_id: usuarioId, Estado: true },
@@ -67,10 +89,20 @@ export class UsuarioService {
     return usuario;
   }
 
+  /**
+   * Busca un usuario por su correo electrónico.
+   * @param correo Correo a buscar.
+   * @returns Entidad Usuario o null si no existe.
+   */
   async findByCorreo(correo: string): Promise<Usuario | null> {
     return this.usuarioRepository.findOne({ where: { Correo: correo, Estado: true } });
   }
 
+  /**
+   * Busca un usuario por su ID de Supabase.
+   * @param supabaseId ID de Supabase.
+   * @returns DTO del usuario o null si no existe.
+   */
   async findBySupabaseId(supabaseId: string): Promise<ResponseUsuarioDto | null> {
     const usuario = await this.usuarioRepository.findOne({
       where: { supabaseId, Estado: true },
@@ -79,16 +111,36 @@ export class UsuarioService {
   }
 
   // ─── Contraseña ────────────────────────────────────────────────
+
+  /**
+   * Valida si una contraseña en texto plano coincide con su hash.
+   * @param contrasenaPlana Contraseña sin cifrar.
+   * @param contrasenaHash Hash de la contraseña.
+   * @returns true si coinciden, false en caso contrario.
+   */
   async validarContrasena(contrasenaPlana: string, contrasenaHash: string | null): Promise<boolean> {
     if (!contrasenaHash) return false;
     return bcrypt.compare(contrasenaPlana, contrasenaHash);
   }
 
+  /**
+   * Cifra una contraseña usando bcrypt.
+   * @param contrasena Contraseña a cifrar.
+   * @returns Hash de la contraseña.
+   */
   private async cifrarContrasena(contrasena: string): Promise<string> {
     return bcrypt.hash(contrasena, this.SALT_ROUNDS);
   }
 
   // ─── Crear ─────────────────────────────────────────────────────
+
+  /**
+   * Crea un nuevo usuario en el sistema.
+   * @param datos Datos del usuario a crear.
+   * @returns Usuario creado en formato DTO.
+   * @throws ConflictException si el correo ya está registrado.
+   * @throws BadRequestException si falta la contraseña para registro local.
+   */
   async create(datos: CreateUsuarioDto): Promise<ResponseUsuarioDto> {
     const existe = await this.findByCorreo(datos.Correo);
     if (existe) throw new ConflictException('El correo ya está registrado');
@@ -109,6 +161,11 @@ export class UsuarioService {
     return this.toResponseDto(guardado);
   }
 
+  /**
+   * Crea o retorna un usuario proveniente de Supabase.
+   * @param user Datos del usuario de Supabase.
+   * @returns Usuario en formato DTO.
+   */
   async createFromSupabase(user: {
     email: string;
     userId: string;
@@ -137,6 +194,14 @@ export class UsuarioService {
   }
 
   // ─── Actualizar ────────────────────────────────────────────────
+
+  /**
+   * Actualiza la información de un usuario.
+   * @param usuarioId ID del usuario.
+   * @param datos Nuevos datos.
+   * @param file (Opcional) Nueva foto de perfil.
+   * @returns Usuario actualizado en formato DTO.
+   */
   async update(usuarioId: number, datos: UpdateUsuarioDto, file?: File,): Promise<ResponseUsuarioDto> {
     const usuario = await this.findEntityById(usuarioId);
     if (file) {
@@ -147,11 +212,20 @@ export class UsuarioService {
     return this.toResponseDto(guardado);
   }
 
+  /**
+   * Cambia la contraseña de un usuario en Supabase.
+   * @param supabaseId ID de Supabase.
+   * @param contrasenaNueva Nueva contraseña.
+   */
   async cambiarContrasena(supabaseId: string, contrasenaNueva: string): Promise<void> {
     // Llamada directa a Supabase
     await this.supabaseAuthService.cambiarContrasena(supabaseId, contrasenaNueva);
   }
 
+  /**
+   * Inicia el proceso de recuperación de contraseña enviando un PIN al correo.
+   * @param email Correo del usuario.
+   */
   async solicitarRecuperacion(email: string): Promise<void> {
     const usuario = await this.usuarioRepository.findOne({
       where: { Correo: email, Estado: true },
@@ -174,6 +248,13 @@ export class UsuarioService {
     }
   }
 
+  /**
+   * Confirma la recuperación de contraseña validando el PIN y actualizando en Supabase.
+   * @param email Correo del usuario.
+   * @param codigo PIN de recuperación.
+   * @param nuevaContrasena Nueva contraseña.
+   * @throws BadRequestException si hay errores en la validación o actualización.
+   */
   async confirmarRecuperacion(
     email: string,
     codigo: string,
@@ -209,10 +290,21 @@ export class UsuarioService {
     }
   }
 
+  /**
+   * Envía un enlace de restablecimiento de contraseña vía Supabase.
+   * @param email Correo del usuario.
+   * @param redirectTo URL de redirección opcional.
+   */
   async restablecerContrasena(email: string, redirectTo?: string): Promise<void> {
     await this.supabaseAuthService.restablecerContrasena(email, redirectTo);
   }
 
+  /**
+   * Actualiza el estado premium de un usuario.
+   * @param usuarioId ID del usuario.
+   * @param premium true si es premium.
+   * @param expira Fecha de expiración.
+   */
   async actualizarPremium(usuarioId: number, premium: boolean, expira: Date | null): Promise<void> {
     const usuario = await this.findEntityById(usuarioId);
     usuario.Premium = premium;
@@ -221,12 +313,22 @@ export class UsuarioService {
   }
 
   // ─── Eliminar ──────────────────────────────────────────────────
+
+  /**
+   * Desactiva un usuario (eliminación lógica).
+   * @param usuarioId ID del usuario.
+   */
   async remove(usuarioId: number): Promise<void> {
     const usuario = await this.findEntityById(usuarioId);
     usuario.Estado = false;
     await this.usuarioRepository.save(usuario);
   }
 
+  /**
+   * Obtiene un usuario existente por su token o lo crea si no existe (proveniente de Supabase).
+   * @param user Datos del usuario del token.
+   * @returns DTO del usuario.
+   */
   async getOrCreateFromToken(user: any) {
     let usuario = await this.findBySupabaseId(user.userId);
 
