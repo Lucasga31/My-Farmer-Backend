@@ -42,6 +42,9 @@ export class Usuario {
   @Column({ type: 'varchar', length: 50, nullable: true })
   Auth_Provider: string | null;
 
+  @Column({ type: 'varchar', length: 255, nullable: true })
+  ExpoPushToken: string | null;
+
   @Column({ type: 'boolean', default: true })
   Estado: boolean;
 

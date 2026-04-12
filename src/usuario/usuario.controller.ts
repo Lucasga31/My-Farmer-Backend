@@ -134,6 +134,22 @@ export class UsuarioController {
   }
 
   /**
+   * PATCH /usuarios/push-token
+   * Registra o actualiza el token de notificaciones push del usuario autenticado.
+   * Headers: Authorization: Bearer <token_supabase>
+   * Body: { "token": "ExponentPushToken[xxxxxx]" }
+   */
+  @UseGuards(SupabaseAuthGuard)
+  @Patch('push-token')
+  async guardarPushToken(
+    @Req() req,
+    @Body() body: { token: string },
+  ): Promise<void> {
+    const usuario = await this.usuarioService.getOrCreateFromToken(req.user);
+    return this.usuarioService.guardarPushToken(usuario.Usuario_id, body.token);
+  }
+
+  /**
    * PATCH /usuarios/cambiar-contrasena
    * Cambia la contraseña
    * Headers: Authorization: Bearer <token_supabase>

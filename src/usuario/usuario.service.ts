@@ -300,6 +300,17 @@ export class UsuarioService {
   }
 
   /**
+   * Guarda o actualiza el token de notificaciones push (Expo) de un usuario.
+   * @param usuarioId ID del usuario.
+   * @param token Token de Expo del dispositivo.
+   */
+  async guardarPushToken(usuarioId: number, token: string): Promise<void> {
+    const usuario = await this.findEntityById(usuarioId);
+    usuario.ExpoPushToken = token;
+    await this.usuarioRepository.save(usuario);
+  }
+
+  /**
    * Actualiza el estado premium de un usuario.
    * @param usuarioId ID del usuario.
    * @param premium true si es premium.
