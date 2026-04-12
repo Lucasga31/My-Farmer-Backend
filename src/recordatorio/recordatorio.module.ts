@@ -8,6 +8,7 @@ import { RecordatorioController } from './recordatorio.controller';
 import { PlanConfigModule } from 'src/plan_config/plan_config.module';
 import { UsuarioModule } from '../usuario/usuario.module';
 import { AuthModule } from 'src/auth/auth.module';
+import { PushNotificacionModule } from 'src/push_notificacion/push_notificacion.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { AuthModule } from 'src/auth/auth.module';
     PlanConfigModule,
     UsuarioModule,
     AuthModule,
+    PushNotificacionModule,
   ],
   controllers: [RecordatorioController],
   providers: [RecordatorioService],

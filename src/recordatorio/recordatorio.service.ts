@@ -1,6 +1,7 @@
 import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { Cron, CronExpression } from '@nestjs/schedule';
 import { Recordatorio, EntidadTipo } from './entities/recordatorio.entity';
 import { Animal } from 'src/animal/entities/animal.entity';
 import { Cultivo } from 'src/cultivo/entities/cultivo.entity';
@@ -10,6 +11,7 @@ import { TipoPlan, NombreParametro } from '../plan_config/entities/plan_config.e
 import { CreateRecordatorioDto } from './dto/create-recordatorio.dto';
 import { UpdateRecordatorioDto } from './dto/update-recordatorio.dto';
 import { ResponseRecordatorioDto } from './dto/response-recordatorio.dto';
+import { PushNotificacionService } from 'src/push_notificacion/push_notificacion.service';
 
 @Injectable()
 export class RecordatorioService {
@@ -23,6 +25,7 @@ export class RecordatorioService {
     private readonly cultivoRepository: Repository<Cultivo>,
     private readonly planConfigService: PlanConfigService,
     private readonly usuarioService: UsuarioService,
+    private readonly pushNotificacionService: PushNotificacionService,
   ) {}
 
   /**
@@ -157,12 +160,16 @@ export class RecordatorioService {
   }
 
   /**
-   * Procesa los recordatorios cuya fecha ya ha pasado para marcarlos como enviados.
+   * Procesa los recordatorios cuya fecha ya ha pasado: envía la notificación push
+   * al dispositivo del usuario y los marca como enviados.
+   * Se ejecuta automáticamente cada minuto.
    */
+  @Cron(CronExpression.EVERY_MINUTE)
   async procesarPendientes(): Promise<void> {
     const ahora = new Date();
     const pendientes = await this.recordatorioRepository
       .createQueryBuilder('recordatorio')
+      .leftJoinAndSelect('recordatorio.Usuario', 'usuario')
       .where('recordatorio.Enviado = false')
       .andWhere('recordatorio.Cancelado = false')
       .andWhere('recordatorio.Recordar <= :ahora', { ahora })
@@ -170,6 +177,14 @@ export class RecordatorioService {
 
     for (const recordatorio of pendientes) {
       try {
+        const pushToken = recordatorio.Usuario?.ExpoPushToken;
+        if (pushToken) {
+          await this.pushNotificacionService.enviarNotificacion(
+            pushToken,
+            recordatorio.Titulo,
+            recordatorio.Descripcion ?? 'Tienes un recordatorio pendiente',
+          );
+        }
         recordatorio.Enviado = true;
         await this.recordatorioRepository.save(recordatorio);
       } catch {
