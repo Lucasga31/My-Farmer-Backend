@@ -18,7 +18,7 @@ import { AuthModule } from 'src/auth/auth.module';
     UsuarioModule,
     CategoriaAnimalModule,
     ParcelaModule,
-    EventoAnimalModule, // ← necesario para llamar eliminarPorAnimal en remove
+    EventoAnimalModule,
     AuthModule,
   ],
   controllers: [AnimalController],

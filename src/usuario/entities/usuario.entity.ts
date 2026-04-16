@@ -28,14 +28,12 @@ export class Usuario {
   @Column({ type: 'varchar', length: 150, unique: true })
   Correo: string;
 
-  // opcional si quieres mantener contraseñas locales
   @Column({ type: 'varchar', length: 255, nullable: true })
   Contrasena: string | null;
 
   @Column({ type: 'varchar', length: 255, nullable: true })
   Foto: string | null;
 
-  // se usa para mapear al usuario de Supabase
   @Column({ type: 'varchar', length: 255, nullable: true, unique: true })
   supabaseId: string | null;
 

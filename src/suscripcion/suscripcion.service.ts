@@ -165,7 +165,7 @@ export class SuscripcionService {
     suscripcion.Fin = new Date();
     await this.suscripcionRepository.save(suscripcion);
 
-    // ← quitar premium al usuario
+    // quitar premium al usuario
     await this.usuarioService.actualizarPremium(suscripcion.Usuario_id, false, null);
   }
 }

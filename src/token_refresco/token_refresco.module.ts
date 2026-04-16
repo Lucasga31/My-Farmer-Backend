@@ -8,7 +8,7 @@ import { UsuarioModule } from '../usuario/usuario.module';
 @Module({
   imports: [
     TypeOrmModule.forFeature([TokenRefresco]),
-    UsuarioModule, // ← agregar
+    UsuarioModule,
   ],
   controllers: [TokenRefrescoController],
   providers: [TokenRefrescoService],

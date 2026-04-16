@@ -93,6 +93,38 @@ Nest is an MIT-licensed open source project. It can grow thanks to the sponsors 
 - Website - [https://nestjs.com](https://nestjs.com/)
 - Twitter - [@nestframework](https://twitter.com/nestframework)
 
+## Environment Variables
+
+Para ejecutar el proyecto,  se necesita crear un archivo `.env` en la raíz del proyecto con las siguientes variables:
+
+| Variable | Descripción |
+|----------|-------------|
+| `DB_HOST` | Host de la base de datos |
+| `DB_PORT` | Puerto de la base de datos |
+| `DB_USERNAME` | Usuario de la base de datos |
+| `DB_PASSWORD` | Contraseña de la base de datos |
+| `DB_DATABASE` | Nombre de la base de datos |
+| `SUPABASE_URL` | URL del proyecto en Supabase |
+| `SUPABASE_KEY` | Clave API del proyecto en Supabase |
+| `SUPABASE_JWT_SECRET` | Secreto JWT de Supabase |
+| `MAIL_USER` | Correo electrónico para envío de emails |
+| `MAIL_PASS` | Contraseña de aplicación para el correo |
+
+### Ejemplo de `.env`
+
+```env
+DB_HOST=localhost
+DB_PORT=3306
+DB_USERNAME=root
+DB_PASSWORD=password
+DB_DATABASE=myfarmer
+SUPABASE_URL=https://proyecto.supabase.co
+SUPABASE_KEY=clave-api
+SUPABASE_JWT_SECRET=secreto-jwt
+MAIL_USER=correo@gmail.com
+MAIL_PASS=contraseña-de-aplicacion
+```
+
 ## License
 
 Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).

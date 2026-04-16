@@ -1,4 +1,3 @@
-// DTO para actualizar un usuario
 export class UpdateUsuarioDto {
   Nombre?: string;
   Apellido?: string;

@@ -7,7 +7,7 @@ export class SupabaseAuthService {
 
   /**
    * Cambia la contraseña de un usuario en Supabase
-   * ⚡ Solo usando supabaseId y Service Role
+   * Solo usando supabaseId y Service Role
    */
   async cambiarContrasena(supabaseId: string, contrasenaNueva: string): Promise<void> {
     if (!supabaseId) throw new BadRequestException('supabaseId requerido');
@@ -22,7 +22,7 @@ export class SupabaseAuthService {
 
   /**
    * Restablece la contraseña de un usuario mediante email
-   * ⚡ Esto envía el correo de reset a Supabase
+   * Esto envía el correo de reset a Supabase
    */
   async restablecerContrasena(email: string, redirectTo?: string): Promise<void> {
     if (!email) throw new BadRequestException('Email requerido');
