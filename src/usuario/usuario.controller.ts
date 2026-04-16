@@ -117,7 +117,7 @@ export class UsuarioController {
   }
 
   /**
- * 🟠 PATCH /usuarios
+ * PATCH /usuarios
  * Headers: Authorization: Bearer <token_supabase>
  * Body: { "Nombre": "Juan Editado" }
  */
@@ -173,7 +173,7 @@ export class UsuarioController {
 
   /**
    * NO UTILIZAR
-   * 🟠 PATCH /usuarios/restablecer-contrasena
+   * PATCH /usuarios/restablecer-contrasena
    * Body: { "email": "juan@example.com", "redirectTo": "http://localhost:3000/reset" }
    */
   @Patch('restablecer-contrasena')
@@ -186,7 +186,7 @@ export class UsuarioController {
 
   /**
    * SIN UTILIZAR
-   * 🟠 PATCH /usuarios/:id/premium
+   * PATCH /usuarios/:id/premium
    * Headers: Authorization: Bearer <token_supabase>
    * Body: { "premium": true, "expira": "2026-12-31T23:59:59Z" }
    */
@@ -202,7 +202,7 @@ export class UsuarioController {
 
   /**
    * SIN UTILIZAR
-   * 🔴 DELETE /usuarios/:id
+   * DELETE /usuarios/:id
    * Headers: Authorization: Bearer <token_supabase>
    */
   @UseGuards(SupabaseAuthGuard)

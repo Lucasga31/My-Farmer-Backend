@@ -9,7 +9,7 @@ import { AuthModule } from 'src/auth/auth.module';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([Crecimiento, Cultivo]), // ← agregar Cultivo
+    TypeOrmModule.forFeature([Crecimiento, Cultivo]),
     UsuarioModule,
     AuthModule
   ],

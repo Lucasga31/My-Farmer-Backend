@@ -231,7 +231,7 @@ export class UsuarioService {
       where: { Correo: email, Estado: true },
     });
 
-    // ⚡ No revelar si existe o no por seguridad (evita enumeración de usuarios)
+    // No revelar si existe o no por seguridad
     if (!usuario) return;
 
     // 1. Generar y guardar PIN en nuestra DB local

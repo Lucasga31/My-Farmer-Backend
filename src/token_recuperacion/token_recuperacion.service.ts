@@ -62,7 +62,7 @@ export class TokenRecuperacionService {
    * @returns Token creado en formato DTO.
    */
   async create(usuarioId: number): Promise<ResponseTokenRecuperacionDto> {
-    // 🔥 Invalidar tokens anteriores
+    //Invalidar tokens anteriores
     await this.tokenRepository.update(
       { Usuario_id: usuarioId, Usado_En: IsNull() },
       { Usado_En: new Date() },
@@ -72,7 +72,7 @@ export class TokenRecuperacionService {
       Usuario_id: usuarioId,
       Token: this.generarPin(),
       Expira: this.calcularExpiracion(),
-      Intentos: 0, // ⚡ importante
+      Intentos: 0,
     });
 
     const guardado = await this.tokenRepository.save(token);
@@ -96,12 +96,11 @@ export class TokenRecuperacionService {
         Usuario_id: usuarioId,
         Usado_En: IsNull(),
       },
-      order: { Registro: 'DESC' }, // 🔥 el más reciente
+      order: { Registro: 'DESC' },
     });
 
     if (!token) throw new BadRequestException('PIN incorrecto');
 
-    // 🔥 Control de intentos
     if (token.Intentos >= 5) {
       throw new BadRequestException('Demasiados intentos, solicita un nuevo código');
     }
@@ -126,7 +125,6 @@ export class TokenRecuperacionService {
     token.Usado_En = new Date();
     await this.tokenRepository.save(token);
 
-    // 🔥 Opcional: invalidar todos los demás tokens activos
     await this.tokenRepository.update(
       { Usuario_id: token.Usuario_id, Usado_En: IsNull() },
       { Usado_En: new Date() },

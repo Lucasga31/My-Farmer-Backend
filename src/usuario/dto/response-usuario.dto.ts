@@ -1,4 +1,3 @@
-// DTO para la respuesta de usuario (lo que se devuelve al cliente)
 export class ResponseUsuarioDto {
   Usuario_id: number;
   Nombre?: string;
@@ -11,5 +10,5 @@ export class ResponseUsuarioDto {
   Estado: boolean;
   Registro: Date;
   Actualizado: Date;
-  supabaseId?: string | null; // incluir si quieres exponer el id de Supabase
+  supabaseId?: string | null;
 }

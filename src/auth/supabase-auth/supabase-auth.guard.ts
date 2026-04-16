@@ -8,8 +8,7 @@ export class SupabaseAuthGuard implements CanActivate {
   private jwks: any;
 
   constructor(private configService: ConfigService) {
-    // Inicializamos el JWKS set usando la URL de tu proyecto de Supabase
-    // El issuer que pasaste en el ejemplo es: https://dmchnftqmmtcxnqwetca.supabase.co/auth/v1
+    // Inicializamos el JWKS set usando la URL del proyecto de Supabase
     const supabaseUrl = this.configService.get<string>('SUPABASE_URL') || 'https://dmchnftqmmtcxnqwetca.supabase.co';
     const jwksUrl = new URL(`${supabaseUrl}/auth/v1/.well-known/jwks.json`);
     this.jwks = createRemoteJWKSet(jwksUrl);
