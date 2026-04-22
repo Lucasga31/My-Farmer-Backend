@@ -202,11 +202,19 @@ export class CultivoService {
       'Notas', 'Foto', 'Parcela_id', 'Tipo_Cultivo_id',
     ];
 
+    const camposNumericos: (keyof UpdateCultivoDto)[] = ['Rendimiento_Estimado'];
+
     for (const campo of camposAuditables) {
       const valorAnterior = cultivo[campo];
       const valorNuevo = datos[campo];
+      if (valorNuevo === undefined) continue;
 
-      if (valorNuevo !== undefined && String(valorAnterior) !== String(valorNuevo)) {
+      const esNumerico = camposNumericos.includes(campo);
+      const sinCambio = esNumerico
+        ? parseFloat(String(valorAnterior)) === parseFloat(String(valorNuevo))
+        : String(valorAnterior) === String(valorNuevo);
+
+      if (!sinCambio) {
         const historial = this.historialRepository.create({
           Cultivo_id: cultivoId,
           Campo_Mod: campo,

@@ -230,10 +230,19 @@ export class AnimalService {
       'Estado', 'Parcela_id', 'Categoria_Animal_id', 'Foto',
     ];
 
+    const camposNumericos: (keyof UpdateAnimalDto)[] = ['Peso', 'Altura'];
+
     for (const campo of camposAuditables) {
       const valorAnterior = animal[campo];
       const valorNuevo = datos[campo];
-      if (valorNuevo !== undefined && String(valorAnterior) !== String(valorNuevo)) {
+      if (valorNuevo === undefined) continue;
+
+      const esNumerico = camposNumericos.includes(campo);
+      const sinCambio = esNumerico
+        ? parseFloat(String(valorAnterior)) === parseFloat(String(valorNuevo))
+        : String(valorAnterior) === String(valorNuevo);
+
+      if (!sinCambio) {
         const historial = this.historialRepository.create({
           Animal_id: animalId,
           Campo_Mod: campo,
